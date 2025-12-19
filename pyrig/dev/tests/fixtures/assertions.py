@@ -23,7 +23,7 @@ from pyrig.src.modules.module import (
 )
 from pyrig.src.modules.package import get_objs_from_obj
 from pyrig.src.os.os import run_subprocess
-from pyrig.src.project.mgt import PROJECT_MGT_RUN_ARGS
+from pyrig.src.project.mgt import DependencyManager
 from pyrig.src.testing.assertions import assert_with_msg
 from pyrig.src.testing.convention import (
     get_obj_from_test_obj,
@@ -109,8 +109,8 @@ def main_test_fixture(mocker: MockerFixture) -> None:
     src_package_name = PyprojectConfigFile.get_package_name()
 
     cmds = [
-        [*PROJECT_MGT_RUN_ARGS, project_name, "--help"],
-        [*PROJECT_MGT_RUN_ARGS, project_name, main.main.__name__, "--help"],
+        DependencyManager.get_run_args(project_name, main.main.__name__),
+        DependencyManager.get_run_args(project_name, main.main.__name__, "--help"),
     ]
     success = False
     for cmd in cmds:
