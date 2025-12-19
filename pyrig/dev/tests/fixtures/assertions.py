@@ -19,9 +19,9 @@ from pyrig.dev.utils.testing import session_fixture
 from pyrig.src.modules.module import (
     get_module_content_as_str,
     get_module_name_replacing_start_module,
-    get_objs_from_obj,
     make_obj_importpath,
 )
+from pyrig.src.modules.package import get_objs_from_obj
 from pyrig.src.os.os import run_subprocess
 from pyrig.src.project.mgt import PROJECT_MGT_RUN_ARGS
 from pyrig.src.testing.assertions import assert_with_msg

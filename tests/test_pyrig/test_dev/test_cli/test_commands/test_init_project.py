@@ -24,8 +24,9 @@ from pyrig.dev.cli.subcommands import init
 from pyrig.dev.configs.base.base import ConfigFile
 from pyrig.dev.configs.pyproject import PyprojectConfigFile
 from pyrig.main import main
-from pyrig.src.modules.module import make_obj_importpath, to_path
+from pyrig.src.modules.module import make_obj_importpath
 from pyrig.src.modules.package import get_project_name_from_pkg_name
+from pyrig.src.modules.path import ModulePath
 from pyrig.src.os.os import run_subprocess
 from pyrig.src.project.mgt import PROJECT_MGT, PROJECT_MGT_RUN_ARGS
 from pyrig.src.testing.assertions import assert_with_msg
@@ -105,8 +106,9 @@ def test_init_project(tmp_path: Path) -> None:
     project_name = "src-project"
 
     pyrig_temp_path = tmp_path / PyprojectConfigFile.get_project_name()
+    pyrig_path = ModulePath.pkg_type_to_dir_path(pyrig)
     shutil.copytree(
-        to_path(pyrig.__name__, is_package=True).parent,
+        pyrig_path.parent,
         pyrig_temp_path,
     )
     pyrig_temp_path = pyrig_temp_path.resolve()
