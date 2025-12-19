@@ -63,6 +63,11 @@ class TestDependencyManager:
         result = DependencyManager.get_run_args("pytest")
         assert result == ("uv", "run", "pytest")
 
+    def test_get_add_dependencies_args(self) -> None:
+        """Test method."""
+        result = DependencyManager.get_add_dependencies_args("pytest", "ruff")
+        assert result == ("uv", "add", "pytest", "ruff")
+
     def test_get_add_dev_dependencies_args(self) -> None:
         """Test method."""
         result = DependencyManager.get_add_dev_dependencies_args("pytest", "ruff")
@@ -183,6 +188,11 @@ class TestVersionControl:
         result = VersionControl.name()
         assert result == "git"
 
+    def test_get_init_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_init_args()
+        assert result == ("git", "init")
+
     def test_get_add_args(self) -> None:
         """Test method."""
         result = VersionControl.get_add_args("file.py")
@@ -217,6 +227,41 @@ class TestVersionControl:
         """Test method."""
         result = VersionControl.get_push_args()
         assert result == ("git", "push")
+
+    def test_get_config_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_args("user.email", "test@example.com")
+        assert result == ("git", "config", "user.email", "test@example.com")
+
+    def test_get_config_global_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_global_args("user.email", "test@example.com")
+        assert result == ("git", "config", "--global", "user.email", "test@example.com")
+
+    def test_get_config_local_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_local_args("user.email", "test@example.com")
+        assert result == ("git", "config", "--local", "user.email", "test@example.com")
+
+    def test_get_config_local_user_email_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_local_user_email_args("test@example.com")
+        assert result == ("git", "config", "--local", "user.email", "test@example.com")
+
+    def test_get_config_local_user_name_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_local_user_name_args("Test User")
+        assert result == ("git", "config", "--local", "user.name", "Test User")
+
+    def test_get_config_global_user_email_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_global_user_email_args("test@example.com")
+        assert result == ("git", "config", "--global", "user.email", "test@example.com")
+
+    def test_get_config_global_user_name_args(self) -> None:
+        """Test method."""
+        result = VersionControl.get_config_global_user_name_args("Test User")
+        assert result == ("git", "config", "--global", "user.name", "Test User")
 
 
 class TestPreCommit:

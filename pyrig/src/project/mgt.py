@@ -120,6 +120,18 @@ class DependencyManager(Tool):
         return cls.get_args("run", *args)
 
     @classmethod
+    def get_add_dependencies_args(cls, *args: str) -> Args:
+        """Construct uv add command arguments for dependencies.
+
+        Args:
+            *args: Package names or additional arguments for the add command.
+
+        Returns:
+            Args: Command arguments for 'uv add'.
+        """
+        return cls.get_args("add", *args)
+
+    @classmethod
     def get_add_dev_dependencies_args(cls, *args: str) -> Args:
         """Construct uv add command arguments for dev dependencies.
 
@@ -343,6 +355,18 @@ class VersionControl(Tool):
         return "git"
 
     @classmethod
+    def get_init_args(cls, *args: str) -> Args:
+        """Construct git init command arguments.
+
+        Args:
+            *args: Additional arguments to append to the init command.
+
+        Returns:
+            Args: Command arguments for 'git init'.
+        """
+        return cls.get_args("init", *args)
+
+    @classmethod
     def get_add_args(cls, *args: str) -> Args:
         """Construct git add command arguments.
 
@@ -413,6 +437,7 @@ class VersionControl(Tool):
         Returns:
             Args: Command arguments for 'git commit --no-verify -m <msg>'.
         """
+        # wrap in quotes in case there are quotes in the message
         return cls.get_commit_args("--no-verify", "-m", msg, *args)
 
     @classmethod
@@ -426,6 +451,94 @@ class VersionControl(Tool):
             Args: Command arguments for 'git push'.
         """
         return cls.get_args("push", *args)
+
+    @classmethod
+    def get_config_args(cls, *args: str) -> Args:
+        """Construct git config command arguments.
+
+        Args:
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config'.
+        """
+        return cls.get_args("config", *args)
+
+    @classmethod
+    def get_config_global_args(cls, *args: str) -> Args:
+        """Construct git config command arguments with --global flag.
+
+        Args:
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config --global'.
+        """
+        return cls.get_config_args("--global", *args)
+
+    @classmethod
+    def get_config_local_args(cls, *args: str) -> Args:
+        """Construct git config command arguments with --local flag.
+
+        Args:
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config --local'.
+        """
+        return cls.get_config_args("--local", *args)
+
+    @classmethod
+    def get_config_local_user_email_args(cls, email: str, *args: str) -> Args:
+        """Construct git config command arguments for user email.
+
+        Args:
+            email: Email address.
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config --local user.email <email>'.
+        """
+        return cls.get_config_local_args("user.email", email, *args)
+
+    @classmethod
+    def get_config_local_user_name_args(cls, name: str, *args: str) -> Args:
+        """Construct git config command arguments for user name.
+
+        Args:
+            name: Name.
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config --local user.name <name>'.
+        """
+        return cls.get_config_local_args("user.name", name, *args)
+
+    @classmethod
+    def get_config_global_user_email_args(cls, email: str, *args: str) -> Args:
+        """Construct git config command arguments for user email.
+
+        Args:
+            email: Email address.
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config user.email <email>'.
+        """
+        return cls.get_config_global_args("user.email", email, *args)
+
+    @classmethod
+    def get_config_global_user_name_args(cls, name: str, *args: str) -> Args:
+        """Construct git config command arguments for user name.
+
+        Args:
+            name: Name.
+            *args: Additional arguments to append to the config command.
+
+        Returns:
+            Args: Command arguments for 'git config user.name <name>'.
+        """
+        return cls.get_config_global_args("user.name", name, *args)
 
 
 class PreCommit(Tool):

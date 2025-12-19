@@ -4,7 +4,6 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
-from pytest_mock import MockFixture
 
 from pyrig.dev.configs.base.base import YamlConfigFile
 from pyrig.dev.configs.git.pre_commit import PreCommitConfigConfigFile
@@ -97,16 +96,8 @@ class TestPreCommitConfigConfigFile:
         )
 
     def test___init__(
-        self,
-        my_test_pre_commit_config_file: type[PreCommitConfigConfigFile],
-        mocker: MockFixture,
+        self, my_test_pre_commit_config_file: type[PreCommitConfigConfigFile]
     ) -> None:
         """Test method for __init__."""
-        # Mock install to avoid running pre-commit install
-        mocker.patch.object(
-            my_test_pre_commit_config_file,
-            "install",
-        )
         # Create instance
         my_test_pre_commit_config_file()
-        # Verify instance was created successfully

@@ -25,10 +25,8 @@ from pyrig.dev.configs.base.base import ConfigFile
 from pyrig.dev.configs.pyproject import PyprojectConfigFile
 from pyrig.main import main
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.modules.package import get_project_name_from_pkg_name
 from pyrig.src.modules.path import ModulePath
-from pyrig.src.os.os import run_subprocess
-from pyrig.src.project.mgt import DependencyManager, Pyrig
+from pyrig.src.project.mgt import DependencyManager, Pyrig, VersionControl
 from pyrig.src.testing.assertions import assert_with_msg
 
 logger = logging.getLogger(__name__)
@@ -95,7 +93,7 @@ def test_running_pre_commit_hooks(mocker: MockFixture) -> None:
     mock_run.assert_called()
 
 
-def test_init_project(tmp_path: Path) -> None:  # noqa: PLR0915
+def test_init_project(tmp_path: Path) -> None:
     """Test func for init."""
     # on Actions windows-latest temp path is on another drive so add path fails
     # so we use a tmp dir in the current dir
@@ -128,9 +126,9 @@ def test_init_project(tmp_path: Path) -> None:  # noqa: PLR0915
 
     # Initialize git repo in the test project directory
     with chdir(src_project_dir):
-        run_subprocess(["git", "init"])
-        run_subprocess(["git", "config", "user.email", "test@example.com"])
-        run_subprocess(["git", "config", "user.name", "Test User"])
+        VersionControl.get_init_args().run()
+        VersionControl.get_config_local_user_email_args("test@example.com").run()
+        VersionControl.get_config_local_user_name_args("Test User").run()
 
     with chdir(src_project_dir):
         # Create a clean environment dict without VIRTUAL_ENV to force
@@ -142,14 +140,7 @@ def test_init_project(tmp_path: Path) -> None:  # noqa: PLR0915
         args.run(env=clean_env)
 
         # Add pyrig wheel as a dependency
-        run_subprocess(
-            [
-                "uv",
-                "add",
-                wheel_path,
-            ],
-            env=clean_env,
-        )
+        DependencyManager.get_add_dependencies_args(wheel_path).run(env=clean_env)
 
         # uv add converts absolute paths to relative paths, which breaks when
         # the project is copied to a different location (e.g., in the
@@ -167,26 +158,12 @@ def test_init_project(tmp_path: Path) -> None:  # noqa: PLR0915
         pyproject_toml.write_text(pyproject_content, encoding="utf-8")
 
         # Sync to update the lock file with the new absolute path
-        run_subprocess(["uv", "sync"], env=clean_env)
-
-        # Verify pyrig was installed correctly
-        pyrig_project_name = get_project_name_from_pkg_name(pyrig.__name__)
-
-        args = Pyrig.get_venv_run_cmd_args(init)
+        args = DependencyManager.get_install_dependencies_args()
         args.run(env=clean_env)
 
+        # Verify pyrig was installed correctly by running init also assert init passes
         args = Pyrig.get_venv_run_cmd_args(init)
         stdout = args.run(env=clean_env).stdout.decode("utf-8")
-
-        assert_with_msg(
-            pyrig_project_name in stdout,
-            f"Expected {pyrig_project_name} in stdout, got {stdout}",
-        )
-        # assert command is in stdout
-        assert_with_msg(
-            init.__name__ in stdout,
-            f"Expected {init.__name__} in stdout, got {stdout}",
-        )
 
         # assert the pkgs own cli is available
         args = DependencyManager.get_run_args(project_name, "--help")

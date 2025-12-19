@@ -983,18 +983,13 @@ class Workflow(YamlConfigFile):
         return cls.get_step(
             step_func=cls.step_setup_git,
             run=str(
-                VersionControl.get_args(
-                    "config",
-                    "--global",
-                    "user.email",
+                VersionControl.get_config_global_user_email_args(
                     '"github-actions[bot]@users.noreply.github.com"',
                 ),
             )
             + " && "
             + str(
-                VersionControl.get_args(
-                    "config", "--global", "user.name", '"github-actions[bot]"'
-                )
+                VersionControl.get_config_global_user_name_args('"github-actions[bot]"')
             ),
             step=step,
         )
