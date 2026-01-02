@@ -834,7 +834,7 @@ class Workflow(YamlConfigFile):
             step_func=cls.step_build_container_image,
             run=str(
                 ContainerEngine.get_build_args(
-                    "-t", PyprojectConfigFile.get_project_name(), "."
+                    project_name=PyprojectConfigFile.get_project_name()
                 )
             ),
             step=step,
@@ -860,7 +860,8 @@ class Workflow(YamlConfigFile):
             step_func=cls.step_save_container_image,
             run=str(
                 ContainerEngine.get_save_args(
-                    "-o", image_path.as_posix(), image_file.stem
+                    image_file=image_file,
+                    image_path=image_path,
                 )
             ),
             step=step,
