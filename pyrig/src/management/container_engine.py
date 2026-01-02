@@ -9,6 +9,8 @@ Example:
     >>> build_args.run()
 """
 
+from pathlib import Path
+
 from pyrig.src.management.base.base import Tool
 from pyrig.src.processes import Args
 
@@ -33,25 +35,34 @@ class ContainerEngine(Tool):
         return "podman"
 
     @classmethod
-    def get_build_args(cls, *args: str) -> Args:
+    def get_build_args(cls, *args: str, project_name: str) -> Args:
         """Construct podman build arguments.
 
         Args:
             *args: Build command arguments.
+            project_name: Name of the project to build.
 
         Returns:
             Args for 'podman build'.
         """
-        return cls.get_args("build", *args)
+        return cls.get_args("build", "-t", project_name, ".", *args)
 
     @classmethod
-    def get_save_args(cls, *args: str) -> Args:
+    def get_save_args(cls, *args: str, image_file: Path, image_path: Path) -> Args:
         """Construct podman save arguments.
 
         Args:
             *args: Save command arguments.
+            image_file: Name of the image file to save.
+            image_path: Path to the image file to save.
 
         Returns:
             Args for 'podman save'.
         """
-        return cls.get_args("save", *args)
+        return cls.get_args(
+            "save",
+            "-o",
+            image_path.as_posix(),
+            image_file.stem,
+            *args,
+        )
