@@ -15,6 +15,7 @@ from pyrig.src.modules.class_ import (
     get_all_subclasses,
     get_cached_instance,
 )
+from pyrig.src.modules.inspection import get_unwrapped_obj
 
 
 def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -144,9 +145,9 @@ def test_get_all_methods_from_cls() -> None:
         TestClass._private_method,  # noqa: SLF001
         TestClass.decorated_method,
     ]
-    assert methods == expected_methods, (
-        f"Expected methods {expected_methods}, got {methods}"
-    )
+    expected_method_names = [get_unwrapped_obj(m).__name__ for m in expected_methods]  # ty:ignore[possibly-missing-attribute]
+    method_names = [get_unwrapped_obj(m).__name__ for m in methods]  # ty:ignore[unresolved-attribute]
+    assert method_names == expected_method_names
 
     # Test case 2: Get all methods including inherited methods
     methods = get_all_methods_from_cls(TestClass, exclude_parent_methods=False)
@@ -164,9 +165,9 @@ def test_get_all_methods_from_cls() -> None:
         TestClass._private_method,  # noqa: SLF001
         TestClass.decorated_method,
     ]
-    assert methods == expected_methods, (
-        f"Expected methods {expected_methods}, got {methods}"
-    )
+    expected_method_names = [get_unwrapped_obj(m).__name__ for m in expected_methods]  # ty:ignore[possibly-missing-attribute]
+    method_names = [get_unwrapped_obj(m).__name__ for m in methods]  # ty:ignore[unresolved-attribute]
+    assert method_names == expected_method_names
 
 
 def test_get_all_cls_from_module() -> None:

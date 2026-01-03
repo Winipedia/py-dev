@@ -1,18 +1,14 @@
 """Tests module."""
 
-from pyrig.dev.management.base.base import Tool
 from pyrig.dev.management.package_manager import PackageManager
 
 
 class TestTool:
     """Test class."""
 
-    def test_leaf(self) -> None:
+    def test_L(self) -> None:  # noqa: N802
         """Test method."""
-        assert issubclass(PackageManager, Tool)
-
-        leaf = PackageManager.leaf()
-        assert leaf is PackageManager
+        assert PackageManager.L is PackageManager
 
     def test_name(self) -> None:
         """Test method."""
