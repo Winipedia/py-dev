@@ -276,6 +276,7 @@ def get_objs_from_obj(
     return []
 
 
+@cache
 def discover_equivalent_modules_across_dependents(
     module: ModuleType, dep: ModuleType, until_pkg: ModuleType | None = None
 ) -> list[ModuleType]:
@@ -349,6 +350,7 @@ def discover_equivalent_modules_across_dependents(
     return modules
 
 
+@cache
 def discover_subclasses_across_dependents[T: type](
     cls: T,
     dep: ModuleType,
@@ -464,7 +466,7 @@ def discover_leaf_subclass_across_dependents[T: type](
     should have a single active implementation determined by the inheritance
     chain.
 
-    This is typically used by ``ConfigFile.leaf()`` to find the most-derived
+    This is typically used by ``ConfigFile.L`` to find the most-derived
     version of a config file class. For example, if:
         - ``pyrig`` defines ``PyprojectConfigFile``
         - ``mylib`` extends it as ``MyLibPyprojectConfigFile``
@@ -510,7 +512,7 @@ def discover_leaf_subclass_across_dependents[T: type](
 
     See Also:
         discover_subclasses_across_dependents: General multi-subclass discovery
-        ConfigFile.leaf: Primary use case for this function
+        ConfigFile.L: Primary use case for this function
     """
     classes = discover_subclasses_across_dependents(
         cls=cls,

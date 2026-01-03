@@ -252,7 +252,7 @@ def assert_all_modules_tested() -> None:
     for _, modules in walk_package(src_package):
         all_modules.extend(modules)
 
-    mirror_test_cls = MirrorTestConfigFile.leaf()
+    mirror_test_cls = MirrorTestConfigFile.L
     subclasses = mirror_test_cls.make_subclasses_for_modules(all_modules)
     incorrect_subclasses = [sc for sc in subclasses if not sc.is_correct()]
 

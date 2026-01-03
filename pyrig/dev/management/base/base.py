@@ -27,6 +27,8 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Self
 
+from propert.classproperty import cached_classproperty
+
 import pyrig
 from pyrig.dev import management
 from pyrig.src.modules.package import discover_leaf_subclass_across_dependents
@@ -83,8 +85,8 @@ class Tool(ABC):
         """
         return Args((cls.name(), *args))
 
-    @classmethod
-    def leaf(cls) -> type[Self]:
+    @cached_classproperty
+    def L(cls) -> type[Self]:  # noqa: N802, N805
         """Get the final leaf subclass (deepest in the inheritance tree).
 
         Returns:
